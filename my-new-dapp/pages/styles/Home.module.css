@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navLink {
+    margin-right: 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .loginStatus {
+    font-weight: bold;
+  }
+  
+  .main {
+    padding: 20px;
+  }
+  
