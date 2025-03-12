@@ -11,7 +11,7 @@ export default function Home() {
     setError('');
     setResult(null);
     try {
-      const res = await fetch(`http://localhost:5000/api/add?a=${a}&b=${b}`);
+      const res = await fetch(`http://25.3.19.183:5000/api/add?a=${a}&b=${b}`);
       const data = await res.json();
       if (data.success) {
         setResult(data.result);
