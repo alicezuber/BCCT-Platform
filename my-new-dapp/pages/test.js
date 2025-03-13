@@ -1,17 +1,22 @@
 import { useState } from 'react';
+require('dotenv').config({ path: '../.env' }); // 從上一層資料夾載入 .env
 
 export default function Home() {
   const [a, setA] = useState('');
   const [b, setB] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setResult(null);
     try {
-      const res = await fetch(`http://25.3.19.183:5000/api/add?a=${a}&b=${b}`);
+      const ShiLaCow_ip = process.env.ShiLaCow_ip
+      const res = await fetch(`http://${ShiLaCow_ip}:5000/api/add?a=${a}&b=${b}`);
       const data = await res.json();
       if (data.success) {
         setResult(data.result);
