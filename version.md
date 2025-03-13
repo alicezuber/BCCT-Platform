@@ -2,6 +2,11 @@
 
 ### 未來版本請按規定，加入使用者代號
 
+## 1.2.1-s
+- dotenv新增
+- 移除硬綁定
+- gitinore新增.env
+
 ## 1.2.0-S
 - 新增mongoDB連接
 - 新增login以及register(測試通過尚未發布)
