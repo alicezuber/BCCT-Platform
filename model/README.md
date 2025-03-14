@@ -7,7 +7,7 @@
 ### 1. 安裝需要的套件
 
 ```bash
-pip install flask
+pip install flask flask-cors python-dotenv
 ```
 
 ### 2. 啟動服務器
@@ -16,7 +16,7 @@ pip install flask
 python server.py
 ```
 
-服務器將運行在 http://25.3.19.183:5000
+服務器將運行在 http://25.7.171.251:5000 (由 .env 文件中的 ShiLaCow_ip 設定)
 
 ## API 使用方式
 
@@ -31,12 +31,12 @@ GET /api/add?a=數字1&b=數字2
 
 #### 範例
 ```
-GET http://25.3.19.183:5000/api/add?a=5&b=3
+GET http://25.7.171.251:5000/api/add?a=5&b=3
 ```
 
 #### 使用curl
 ```bash
-curl "http://25.3.19.183:5000/api/add?a=5&b=3"
+curl "http://25.7.171.251:5000/api/add?a=5&b=3"
 ```
 
 ### 2. POST 請求
@@ -56,7 +56,7 @@ Content-Type: application/json
 
 #### 範例
 ```bash
-curl -X POST http://25.3.19.183:5000/api/add \
+curl -X POST http://25.7.171.251:5000/api/add \
   -H "Content-Type: application/json" \
   -d '{"a": 5, "b": 3}'
 ```
@@ -87,3 +87,8 @@ curl -X POST http://25.3.19.183:5000/api/add \
 
 - 如果提供的參數不是有效的數字，API將返回400錯誤。
 - 確保在請求中提供必要的參數 `a` 和 `b`。
+
+## 環境配置
+
+- API 服務器 IP 地址由 `.env` 文件中的 `ShiLaCow_ip` 變數設定。
+- 如需修改服務器 IP，請編輯 `.env` 文件而非直接修改程式碼。
