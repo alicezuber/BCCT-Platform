@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   try {
     await connectToDatabase();
     
-    const { username, password, name, email, blockchain_address, blockchain_private_key } = req.body;
+    const { username, password, name, email } = req.body;
     
     // 檢查用戶名是否已存在
     const existingUser = await User.findOne({ username });
@@ -24,14 +24,12 @@ export default async function handler(req, res) {
       password, // 會在保存時自動加密
       name,
       email,
-      blockchain_address,
-      blockchain_private_key // 會在保存時自動加密
     });
     
     await user.save();
     
-    // 不返回密碼和私鑰
-    const { password: _, blockchain_private_key: __, ...userWithoutSensitiveInfo } = user.toObject();
+    // 不返回敏感資訊
+    const { password: _, ...userWithoutSensitiveInfo } = user.toObject();
     
     res.status(201).json({ 
       message: '註冊成功', 
