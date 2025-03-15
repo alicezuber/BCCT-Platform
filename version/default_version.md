@@ -1,5 +1,8 @@
 # 版本歷史
 
+## 0.3.1 home
+- 完成JWT從LOGIN到HOME
+
 ## 0.3.0 home
 - 更新TODO事項
 
