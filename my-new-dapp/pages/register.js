@@ -1,53 +1,128 @@
 // pages/register.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import styles from './styles/Register.module.css';
 
-export default function RegisterPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
+export default function Register() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    name: '',
+    email: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    setError('');
     
-    // 基本驗證
-    if (password !== confirmPassword) {
-      setMessage('密碼不匹配');
-      return;
-    }
+    setLoading(true);
     
     try {
-      const res = await fetch('./api/login_creataccount', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, email, name }),
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          name: formData.name,
+          email: formData.email
+        })
       });
-      const data = await res.json();
-      if (res.ok) {
-        setMessage(data.message);
-        // 註冊成功後，可以跳轉到登入頁面
-        setTimeout(() => router.push('/login'), 2000);
-      } else {
-        setMessage(data.message || '註冊失敗');
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || '註冊失敗');
       }
-    } catch (error) {
-      setMessage('錯誤: ' + error.message);
+      
+      // 註冊成功，跳轉到登入頁面
+      router.push('/login');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ margin: 'auto', maxWidth: '400px', padding: '1rem' }}>
-      <h1>註冊</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>註冊帳號</h1>
+      
+      {error && (
+        <div className={styles.error}>{error}</div>
+      )}
+      
       <form onSubmit={handleSubmit}>
-        {/* 表單欄位... */}
-        <button type="submit">註冊</button>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>用戶名</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className={styles.input}
+            required
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>密碼</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={styles.input}
+            required
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>姓名</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className={styles.input}
+          />
+        </div>
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>電子郵件</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={styles.input}
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles.button}
+        >
+          {loading ? '處理中...' : '註冊'}
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      
+      <div className={styles.extra}>
+        已有帳號？{' '}
+        <Link href="/login" className={styles.link}>登入</Link>
+      </div>
     </div>
   );
 }

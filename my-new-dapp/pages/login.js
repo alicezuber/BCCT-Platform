@@ -1,64 +1,104 @@
 // pages/login.js
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import styles from './styles/Login.module.css';
 
-export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+export default function Login() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    setError('');
+    setLoading(true);
+    
     try {
-      const res = await fetch('./api/login_password', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        })
       });
-      const data = await res.json();
-      if (res.ok) {
-        setMessage(data.message);
-        // 登入成功後，你可以選擇跳轉到其他頁面
-        router.push('/home');
-      } else {
-        setMessage(data.message || 'Login failed');
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || '登入失敗');
       }
-    } catch (error) {
-      setMessage('Error: ' + error.message);
+      
+      // 保存 token 到 localStorage
+      localStorage.setItem('token', data.token);
+      
+      // 登入成功，跳轉到首頁或儀表板
+      router.push('/home');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ margin: 'auto', maxWidth: '400px', padding: '1rem' }}>
-      <h1>Login</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>登入</h1>
+      
+      {error && (
+        <div className={styles.error}>{error}</div>
+      )}
+      
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <br />
+        <div className={styles.formGroup}>
+          <label className={styles.label}>用戶名</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className={styles.input}
+            required
           />
         </div>
-        <div style={{ marginTop: '1rem' }}>
-          <label>Password:</label>
-          <br />
+        
+        <div className={styles.formGroup}>
+          <label className={styles.label}>密碼</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={styles.input}
+            required
           />
         </div>
-        <button type="submit" style={{ marginTop: '1rem' }}>
-          Login
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles.button}
+        >
+          {loading ? '登入中...' : '登入'}
         </button>
       </form>
-      {message && <p style={{ marginTop: '1rem' }}>{message}</p>}
+      
+      <div className={styles.extra}>
+        還沒有帳號？{' '}
+        <Link href="/register" className={styles.link}>註冊</Link>
+      </div>
     </div>
   );
 }
