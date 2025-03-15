@@ -1,4 +1,6 @@
 # 版本歷史
+## 0.3.2 home
+- index轉向home(魏)
 
 ## 0.3.1 home
 - 完成JWT從LOGIN到HOME
