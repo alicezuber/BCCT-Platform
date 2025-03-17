@@ -1,28 +1,30 @@
 // lib/db.js
-import { MongoClient } from 'mongodb';
-// 或者 import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-// 使用環境變量存儲連接字符串，不要硬編碼
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+  throw new Error('請設置 MONGODB_URI 環境變量');
 }
 
-let cachedClient = null;
-let cachedDb = null;
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-export async function connectToDatabase() {
-  // 如果已連接，使用現有連接
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
+async function connectToDatabase() {
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    const opts = {
+      dbName: 'client_data', // 指定資料庫名稱
+      bufferCommands: false,
+    };
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => mongoose);
   }
 
-  const client = await MongoClient.connect(MONGODB_URI);
-  const db = client.db('your-database-name');
-  
-  cachedClient = client;
-  cachedDb = db;
-
-  return { client, db };
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
+
+export default connectToDatabase;
