@@ -2,12 +2,15 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 export default function Home() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.replace('/home');
-  }, []);
+  // 這個函數正常情況下不會被執行，因為會先被重定向
+  return null;
+}
 
-  // 返回空白或加載指示器，因為頁面會立即重定向
-  return <div>正在重定向到首頁...</div>;
+export async function getServerSideProps() {
+  return {
+    redirect: {
+      destination: '/home',
+      permanent: true, // 設置為 true 表示 301 永久重定向，false 表示 302 臨時重定向
+    }
+  };
 }
