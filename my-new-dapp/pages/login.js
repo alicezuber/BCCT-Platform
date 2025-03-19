@@ -99,10 +99,7 @@ export default function Login() {
         還沒有帳號？{' '}
         <Link href="/register" className={styles.link}>註冊</Link>
       </div>
-      <div className={styles.extra}>
-        忘記密碼？{' '}
-        <Link href="/forget_password" className={styles.link}>忘記密碼</Link>
-      </div>
+
     </div>
   );
 }
