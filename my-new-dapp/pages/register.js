@@ -123,6 +123,10 @@ export default function Register() {
         已有帳號？{' '}
         <Link href="/login" className={styles.link}>登入</Link>
       </div>
+      <div className={styles.extra}>
+        忘記密碼？{' '}
+        <Link href="/forget_password" className={styles.link}>忘記密碼</Link>
+      </div>
     </div>
   );
 }
