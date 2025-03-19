@@ -99,6 +99,7 @@ export default function Login() {
         還沒有帳號？{' '}
         <Link href="/register" className={styles.link}>註冊</Link>
       </div>
+
     </div>
   );
 }
