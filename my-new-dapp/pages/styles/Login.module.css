@@ -1,6 +1,32 @@
+/* Login.module.css */
+.pageContainer {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-image: linear-gradient(to right, #e6f7ef, #d1e9de);
+}
+
+.loginForm {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.welcomeSection {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
 .container {
   max-width: 450px;
-  margin: 80px auto;
+  width: 100%;
+  margin: 0 auto;
   padding: 32px;
   background-color: white;
   border-radius: 12px;
@@ -98,7 +124,52 @@
   text-decoration: underline;
 }
 
+/* 歡迎文字樣式 */
+.welcomeText {
+  font-size: 4rem;
+  font-weight: 700;
+  text-align: center;
+  background-image: linear-gradient(to right, #24b47e, #3861fb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  margin: 0 auto;
+  height: 100px;
+  cursor: default;
+}
+
+.welcomeText::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 5px;
+  height: 80%;
+  width: 3px;
+  background-color: #333;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
 /* 響應式設計 */
+@media (max-width: 768px) {
+  .pageContainer {
+    flex-direction: column;
+  }
+  
+  .loginForm, .welcomeSection {
+    padding: 30px;
+  }
+  
+  .welcomeText {
+    font-size: 3rem;
+  }
+}
+
 @media (max-width: 480px) {
   .container {
     margin: 40px 16px;
@@ -108,17 +179,89 @@
   .title {
     font-size: 1.8rem;
   }
+  
+  .welcomeText {
+    font-size: 2.5rem;
+  }
+}
+/* pages/styles/Login.module.css */
+.pageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
 }
 
-/* 背景圖樣式 */
-/* 請確保您有設定一個頁面層級的容器來包含背景圖 */
-/* 範例用法:
-.pageContainer {
-  position: relative;
-  min-height: 100vh;
-  background-image: url('/carbon-bg.svg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
-*/
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input {
+  width: 100%;
+  max-width: 350px; /* 設定最大寬度 */
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.button {
+  width: 100%;
+  padding: 10px;
+  background-color:  #1b8d21;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.extra {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
