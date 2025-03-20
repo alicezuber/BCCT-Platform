@@ -9,6 +9,9 @@ BCCT-Platform 是一個區塊鏈技術整合平台，包含前端網頁應用、
 TODO list 請努力完成，也可以向其他部分提出要求
 
 # 環境配置
+更詳細請看/rule/about_file.md
+
+
 API 服務器 IP 地址由 .env 文件中的 ShiLaCow_ip 變數設定
 編譯 truffle 時使用 Node.js v16
 其他開發環境使用 Node.js v18
@@ -37,13 +40,12 @@ API 服務將運行在 .env 檔案中的 ShiLaCow_ip 配置的地址上。
 
 
 # 專案結構
-
+更詳細請看/rule/about_file.md
 ```
 ├── model/              # API 服務與模型
 │   ├── README.md       # API 使用說明
 │   └── server.py       # Flask 服務器
 ├── my-new-dapp/        # Next.js 前端應用
-├── git_helper_tk.py    # Git 操作輔助工具
 ├── version/            # 各成員版本記錄
 └── README.md           # 專案說明
 ```
@@ -65,12 +67,15 @@ https://www.getguru.com/zh/reference/document-version-control
 # 關於此專案
 在編譯truffle時 版本使用node v16 除此之外用v18
 
-版本管理
+### 版本管理
+更詳細請看/rule/about_version.md
+
 本專案使用獨立的版本文件進行版本管理，格式為：[vX.Y.Z][使用者代號] 更新內容
 
-主版本號 (X): 重大功能變更或不向下兼容的變更
-次版本號 (Y): 新增功能但保持向下兼容
-修補版本號 (Z): 錯誤修復和小調整
+- 主版本號 (X): 重大功能變更或不向下兼容的變更
+- 次版本號 (Y): 新增功能但保持向下兼容
+- 修補版本號 (Z): 錯誤修復和小調整
+
 各成員版本記錄請參考 version 資料夾中的對應文件。
 
 # Contributors
