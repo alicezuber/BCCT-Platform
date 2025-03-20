@@ -1,3 +1,6 @@
+## vf
+新建立login.js和register.js回首頁按鈕
+更新text.js與text2.js動畫
 ## ve
 更新 Login.module.css Register.module.css
 新建立text.js與text2.js
