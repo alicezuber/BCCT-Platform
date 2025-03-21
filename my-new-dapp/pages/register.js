@@ -56,6 +56,9 @@ export default function Register() {
 
   return (
     <div className={styles.pageContainer}>
+      <Link href="/home" className={styles.homeButton}>
+      回首頁
+      </Link>
       <div className={styles.formContainer}>
         <div className={styles.container}>
           <h1 className={styles.title}>註冊帳號</h1>
@@ -116,7 +119,7 @@ export default function Register() {
 
           <div className={styles.extra}>
             已有帳號？{' '}
-            <Link href="/login" className={styles.link}>登入</Link>
+            <Link href="/login" className={styles.link}>立即登入</Link>
           </div>
         </div>
       </div>

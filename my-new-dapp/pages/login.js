@@ -61,6 +61,9 @@ export default function Login() {
 
   return (
     <div className={styles.pageContainer}>
+        <Link href="/home" className={styles.homeButton}>
+        回首頁
+        </Link>
       <div className={styles.loginForm}>
         <div className={styles.container}>
           <h1 className={styles.title}>登入</h1>
@@ -105,7 +108,7 @@ export default function Login() {
           
           <div className={styles.extra}>
             還沒有帳號？{' '}
-            <Link href="/register" className={styles.link}>註冊</Link>
+            <Link href="/register" className={styles.link}>立即註冊</Link>
           </div>
         </div>
       </div>
