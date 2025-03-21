@@ -66,7 +66,7 @@ export default function Home() {
           <Link href="/page3" className={styles.navLink}>
             Page 3
           </Link>
-          <Link href="/profile" className={styles.navLink}>
+          <Link href="/personal_pages" className={styles.navLink}>
             個人頁面
           </Link>
         </nav>

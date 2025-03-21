@@ -1,0 +1,48 @@
+.page-container {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    background-color: #2563eb;
+    color: white;
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    gap: 16px;
+}
+
+.user-info, .blockchain-info {
+    background-color: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.create-btn {
+    background-color: #3b82f6;
+    color: white;
+    padding: 8px 16px;
+    margin-top: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.create-btn:hover {
+    background-color: #2563eb;
+}
