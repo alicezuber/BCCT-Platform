@@ -1,43 +1,259 @@
-/* styles/Home.module.css */
+/* 注意：在 CSS Module 中不能使用全局變量和全局選擇器 */
+/* 我們可以將全局樣式移到 globals.css，這裡只保留模塊化的類名 */
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 32px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
+  padding: 0 32px;
+  background: white;
+  border-bottom: 1px solid #e0e7e9;
+  height: 72px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
+/* 導覽列 */
 .nav {
   display: flex;
   align-items: center;
+  gap: 24px;
 }
 
 .navLink {
-  margin-right: 20px;
   text-decoration: none;
-  color: inherit;
+  color: #2c3e50;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease-in-out;
+  position: relative;
 }
 
+.navLink:hover {
+  color: #24b47e;
+  background-color: rgba(36, 180, 126, 0.08);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #24b47e;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.navLink:hover::after {
+  width: 70%;
+}
+
+/* 右側登入狀態 */
 .rightHeader {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
 .userInfo {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.authButton {
+  font-weight: 500;
+  color: #546e7a;
+  background-color: #f0f5f3;
   padding: 8px 16px;
-  background: #0070f3;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.userInfo::before {
+  content: '•';
+  color: #24b47e;
+  font-size: 24px;
+}
+
+/* 按鈕樣式 */
+.authButton {
+  padding: 10px 24px;
+  background: #24b47e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.authButton:hover {
+  background: #1a9d6a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 主內容區 */
 .main {
-  padding: 20px;
+  padding: 48px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.main p {
+  font-size: 1.2rem;
+  color: #546e7a;
+  max-width: 700px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+/* 碳權卡片樣式 */
+.carbonCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease-in-out;
+  border-left: 4px solid #24b47e;
+}
+
+.carbonCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.carbonTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #2c3e50;
+}
+
+.carbonDetails {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.carbonInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.carbonLabel {
+  font-size: 0.9rem;
+  color: #546e7a;
+}
+
+.carbonValue {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.carbonActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* 表單樣式 */
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.formInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e0e7e9;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #24b47e;
+  box-shadow: 0 0 0 2px rgba(36, 180, 126, 0.2);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+    height: auto;
+    flex-direction: column;
+    padding: 16px;
+  }
+  
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  
+  .navLink {
+    width: calc(50% - 8px);
+    text-align: center;
+  }
+  
+  .rightHeader {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .main {
+    padding: 32px 16px;
+  }
+  
+  .main h1 {
+    font-size: 2rem;
+  }
+  
+  .main p {
+    font-size: 1rem;
+  }
+  
+  .carbonDetails {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navLink {
+    width: 100%;
+  }
+  
+  .authButton, .userInfo {
+    width: 100%;
+    justify-content: center;
+  }
 }

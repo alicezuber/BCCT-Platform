@@ -1,8 +1,9 @@
 // pages/login.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './styles/Login.module.css';
+import { initWelcomeAnimation } from './text';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,11 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Initialize the welcome text animation
+    initWelcomeAnimation();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -54,50 +60,61 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>登入</h1>
-      
-      {error && (
-        <div className={styles.error}>{error}</div>
-      )}
-      
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>用戶名</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className={styles.input}
-            required
-          />
+    <div className={styles.pageContainer}>
+        <Link href="/home" className={styles.homeButton}>
+        回首頁
+        </Link>
+      <div className={styles.loginForm}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>登入</h1>
+          
+          {error && (
+            <div className={styles.error}>{error}</div>
+          )}
+          
+          <form onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>用戶名</label>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className={styles.input}
+                required
+              />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label}>密碼</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={styles.input}
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className={styles.button}
+            >
+              {loading ? '登入中...' : '登入'}
+            </button>
+          </form>
+          
+          <div className={styles.extra}>
+            還沒有帳號？{' '}
+            <Link href="/register" className={styles.link}>立即註冊</Link>
+          </div>
         </div>
-        
-        <div className={styles.formGroup}>
-          <label className={styles.label}>密碼</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={styles.input}
-            required
-          />
-        </div>
-        
-        <button
-          type="submit"
-          disabled={loading}
-          className={styles.button}
-        >
-          {loading ? '登入中...' : '登入'}
-        </button>
-      </form>
+      </div>
       
-      <div className={styles.extra}>
-        還沒有帳號？{' '}
-        <Link href="/register" className={styles.link}>註冊</Link>
+      <div className={styles.welcomeSection}>
+        <h2 id="welcome-text" className={styles.welcomeText}></h2>
       </div>
     </div>
   );

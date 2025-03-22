@@ -2,6 +2,8 @@
 
 cd到這個資料夾
 
+cd my-new-dapp
+
 ```bash
 npm run dev
 # or
