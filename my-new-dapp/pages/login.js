@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './styles/Login.module.css';
 import { useAuth } from '../context/AuthContext';
-import { initWelcomeAnimation } from './text';
+import { initWelcomeAnimation } from './text.js';
 
 export default function Login() {
   const { login } = useAuth();
