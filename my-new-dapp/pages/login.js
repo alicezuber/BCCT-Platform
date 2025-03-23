@@ -28,6 +28,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     
+
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -44,6 +45,7 @@ export default function Login() {
         throw new Error(data.message || '登入失敗');
       }
       
+
       // 呼叫 Context API 的 login 方法
       login(data.user.username, data.token);
       
@@ -104,6 +106,8 @@ export default function Login() {
           <Link href="/register" className={styles.link}>立即註冊</Link>
         </div>
       </div>
+      
+
     </div>
   );
 }

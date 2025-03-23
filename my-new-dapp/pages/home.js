@@ -6,13 +6,18 @@ import { useRouter } from 'next/router';
 import styles from './styles/Home.module.css';
 import { useAuth } from '../context/AuthContext';
 
+
 export default function Home() {
   const { account, logout } = useAuth();
   const router = useRouter();
 
+
+  
+
   const handleLogin = () => {
     router.push('/login');
   };
+
 
   return (
     <div>
@@ -60,6 +65,7 @@ export default function Home() {
         <h1>歡迎來到大廳</h1>
         <p>這裡是應用的大廳，未登入也能觀看資訊。</p>
       </main>
+
     </div>
   );
 }
