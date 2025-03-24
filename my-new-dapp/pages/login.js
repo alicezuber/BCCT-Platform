@@ -1,5 +1,5 @@
 // pages/login.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './styles/Login.module.css';
@@ -15,6 +15,11 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Initialize the welcome text animation
+    initWelcomeAnimation();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -64,6 +69,7 @@ export default function Login() {
         回首頁
       </Link>
       <div className={styles.loginForm}>
+        <div className={styles.container}>
         <h1>登入</h1>
         {error && <p className={styles.error}>{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -106,6 +112,10 @@ export default function Login() {
           <Link href="/register" className={styles.link}>立即註冊</Link>
         </div>
       </div>
+      </div>
+      <div className={styles.welcomeSection}>
+      <h2 id="welcome-text" className={styles.welcomeText}></h2>
+       </div>
       
 
     </div>
