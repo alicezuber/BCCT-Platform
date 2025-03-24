@@ -1,0 +1,10 @@
+2025-02-15 01:41:14,505 - ERROR - 程序執行失敗: name 'torch' is not defined
+2025-02-15 01:41:14,505 - ERROR - 堆疊追踪:
+Traceback (most recent call last):
+  File "D:\project\bigmodel\bbb\main.py", line 41, in main
+    config = Config.from_args(args)
+  File "D:\project\bigmodel\bbb\config.py", line 43, in from_args
+    config = cls()
+  File "D:\project\bigmodel\bbb\config.py", line 29, in __init__
+    self.device: str = 'cuda' if torch.cuda.is_available() else 'cpu'
+NameError: name 'torch' is not defined
