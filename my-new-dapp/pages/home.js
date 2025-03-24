@@ -1,50 +1,23 @@
 // pages/home.js
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import styles from './styles/Home.module.css';
-// 直接導入 jwt-decode
-import { jwtDecode } from 'jwt-decode'; 
+import { useAuth } from '../context/AuthContext';
+
 
 export default function Home() {
-  const [account, setAccount] = useState(null);
+  const { account, logout } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    // 檢查是否在瀏覽器環境中
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      
-      if (token) {
-        try {
-          // 使用導入的 jwtDecode
-          const decoded = jwtDecode(token);
-         
-          // 確認解析出的令牌中有 username
-          if (decoded && decoded.username) {
-            setAccount(decoded.username);
-          } else {
-            console.error('Token does not contain username');
-          }
-        } catch (error) {
-          console.error('Failed to decode token:', error);
-          // 當令牌解析失敗時，清除無效令牌
-          localStorage.removeItem('token');
-        }
-      }
-    }
-    // dsdsd
-  }, []);
+
+  
 
   const handleLogin = () => {
     router.push('/login');
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setAccount(null);
-  };
 
   return (
     <div>
@@ -54,7 +27,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* Header 區塊，左側是導覽連結，右側顯示登入狀態及按鈕 */}
       <header className={styles.header}>
         <nav className={styles.nav}>
           <Link href="/AddCarbonToken" className={styles.navLink}>
@@ -66,7 +38,7 @@ export default function Home() {
           <Link href="/page3" className={styles.navLink}>
             Page 3
           </Link>
-          <Link href="/profile" className={styles.navLink}>
+          <Link href="/personal_pages" className={styles.navLink}>
             個人頁面
           </Link>
         </nav>
@@ -74,7 +46,7 @@ export default function Home() {
           {account ? (
             <>
               <span className={styles.userInfo}>已登入：{account}</span>
-              <button onClick={handleLogout} className={styles.authButton}>
+              <button onClick={logout} className={styles.authButton}>
                 登出
               </button>
             </>
@@ -89,11 +61,11 @@ export default function Home() {
         </div>
       </header>
 
-      {/* 主內容區 */}
       <main className={styles.main}>
         <h1>歡迎來到大廳</h1>
         <p>這裡是應用的大廳，未登入也能觀看資訊。</p>
       </main>
+
     </div>
   );
 }
