@@ -1,5 +1,9 @@
 # Version History
 
+## v0.1.0
+- 上傳模型訓練程式
+- 避免輸出被異化掉
+
 ## v0.0.8
 - 新增網頁端API代理功能
 - 實現pages/api/proxy.js作為前端和Python服務器的中間層
