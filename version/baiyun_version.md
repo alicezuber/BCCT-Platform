@@ -1,6 +1,13 @@
 # Version History
 
-## v0.1.6 [N]
+## v0.1.7
+- 新增異常檢測 REST API 服務 (api_server.py)
+- 實現 POST 請求異常檢測功能端點 /detect
+- 添加 API 服務啟動批次檔 (start_api.bat)
+- 更新 README.md 添加 API 使用說明
+- 添加 Flask 相關依賴到 requirements.txt
+
+## v0.1.6
 - 更新 PyTorch amp 相關呼叫以符合新版本要求
 - 改善學習率調度器的警告訊息
 - 優化指標計算的零除處理

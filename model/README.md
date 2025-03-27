@@ -1,6 +1,6 @@
 # 異常檢測專案
 
-本專案專注於使用機器學習模型進行異常檢測，包含完整的資料處理、模型訓練與評估流程。
+本專案專注於使用機器學習模型進行異常檢測，包含完整的資料處理、模型訓練與評估流程，以及REST API服務。
 
 ## 安裝與設定
 
@@ -31,7 +31,82 @@ print(f"可用的 GPU 數量: {torch.cuda.device_count()}")
 
 ### 5. 啟動專案
 ```bash
+# 訓練模型
 python main.py
+
+# 啟動API服務
+python main/api_server.py
+# 或使用批次檔
+start_api.bat
+```
+
+## API服務使用說明
+
+本專案提供REST API接口，用於進行異常檢測。
+
+### API端點
+
+#### 1. 健康檢查
+- **URL**: `/health`
+- **方法**: GET
+- **回應範例**:
+```json
+{
+  "status": "ok",
+  "message": "API服務正常運行中"
+}
+```
+
+#### 2. 異常檢測
+- **URL**: `/detect`
+- **方法**: POST
+- **內容類型**: application/json
+- **請求格式**:
+```json
+{
+  "features": [0.1, 0.2, 0.3, 0.4, ...]
+}
+```
+- **回應範例**:
+```json
+{
+  "status": "success",
+  "predictions": [
+    {
+      "sample_id": 0,
+      "anomaly_score": 0.87,
+      "is_anomaly": true
+    }
+  ],
+  "metadata": {
+    "model_version": "1.0.0",
+    "threshold": 0.5
+  }
+}
+```
+
+### API使用範例
+
+使用curl發送請求:
+```bash
+curl -X POST http://localhost:5000/detect \
+  -H "Content-Type: application/json" \
+  -d '{"features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]}'
+```
+
+使用Python發送請求:
+```python
+import requests
+import json
+
+url = "http://localhost:5000/detect"
+payload = {
+    "features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+}
+
+response = requests.post(url, json=payload)
+result = response.json()
+print(json.dumps(result, indent=2))
 ```
 
 ## 專案結構
@@ -44,6 +119,8 @@ python main.py
 - `train.py`: 模型訓練的腳本
 - `utils.py`: 專案的實用函式
 - `visualize.py`: 結果的視覺化工具
+- `api_server.py`: REST API服務器實現
+- `start_api.bat`: API服務啟動批次檔
 
 ## 資料夾結構
 - `datasets/`: 儲存資料集的目錄
