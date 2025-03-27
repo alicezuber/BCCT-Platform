@@ -1,7 +1,5 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 from torch.nn.utils import clip_grad_norm_
 import time
 from pathlib import Path
@@ -13,8 +11,13 @@ from utils import logger, TrainingError
 
 class TrainingEngine:
     def __init__(self, config, model, train_loader, val_loader):
+        # 確保使用 CUDA
+        if not torch.cuda.is_available():
+            logger.warning("警告：未檢測到 CUDA，建議使用 GPU 進行訓練")
+        self.device = torch.device('cuda')  # 強制使用 CUDA
+        config.device = self.device
+        self.model = model.to(self.device)
         self.config = config
-        self.model = model.to(config.device)
         self.train_loader = train_loader
         self.val_loader = val_loader
         
@@ -42,18 +45,19 @@ class TrainingEngine:
             betas=(0.9, 0.999),
             eps=1e-8
         )
+        
+        # 更新混合精度設置
+        self.scaler = GradScaler('cuda', enabled=config.mixed_precision)
+        logger.info("已啟用 CUDA 混合精度訓練")
+
+        # 更新學習率調度器，移除 verbose
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             self.optimizer,
             mode='max',
             factor=0.5,
-            patience=5,
-            verbose=True
+            patience=5
         )
         
-        # 混合精度
-        self.scaler = GradScaler(enabled=config.mixed_precision)
-        self.autocast_device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
         # 添加訓練狀態追蹤
         self.training_state = {
             'last_successful_epoch': -1,
@@ -125,8 +129,8 @@ class TrainingEngine:
                     inputs = inputs.to(self.config.device, non_blocking=True)
                     targets = targets.to(self.config.device, non_blocking=True).float()
                     
-                    # 混合精度前向傳播
-                    with autocast(device_type=self.autocast_device, enabled=self.config.mixed_precision):
+                    # 更新 autocast
+                    with autocast('cuda', enabled=self.config.mixed_precision):
                         outputs, loss = self._safe_forward_pass(inputs, targets)
                         loss = loss / self.config.gradient_accumulation
                     
@@ -211,9 +215,6 @@ class TrainingEngine:
 
     def _calculate_metrics(self, y_true, y_pred):
         """計算評估指標"""
-        from sklearn.metrics import roc_auc_score, accuracy_score
-        from sklearn.metrics import precision_score, recall_score, f1_score
-        
         try:
             # 確保輸入數據有效
             if len(y_true) == 0 or len(y_pred) == 0:
@@ -225,20 +226,25 @@ class TrainingEngine:
                 "auc": roc_auc_score(y_true.cpu(), y_pred.cpu()),
                 "accuracy": accuracy_score(y_true.cpu(), y_pred_bin.cpu()),
                 "f1": f1_score(y_true.cpu(), y_pred_bin.cpu()),
-                "precision": precision_score(y_true.cpu(), y_pred_bin.cpu()),
-                "recall": recall_score(y_true.cpu(), y_pred_bin.cpu())
+                "precision": precision_score(y_true.cpu(), y_pred_bin.cpu(), zero_division=0),
+                "recall": recall_score(y_true.cpu(), y_pred_bin.cpu(), zero_division=0)
             }
             
-            # 驗證指標有效性
+            # 增加中文化的指標說明
             for name, value in metrics.items():
-                if not (0.0 <= value <= 1.0):
-                    logger.warning(f"指標 {name} 超出有效範圍: {value}")
-                    metrics[name] = 0.0
-            
+                metric_names = {
+                    "auc": "AUC 分數",
+                    "accuracy": "準確率",
+                    "f1": "F1 分數",
+                    "precision": "精確度",
+                    "recall": "召回率"
+                }
+                logger.info(f"{metric_names[name]}: {value:.4f}")
+                
             return metrics
             
         except Exception as e:
-            logger.error(f"指標計算失敗: {str(e)}")
+            logger.error(f"指標計算發生錯誤: {str(e)}")
             return {
                 "auc": 0.5,
                 "accuracy": 0.0,

@@ -1,94 +1,55 @@
-# 加法 API 使用說明
+# 異常檢測專案
 
-這是一個簡單的加法API，可以計算兩個數字的和並返回結果。
+本專案專注於使用機器學習模型進行異常檢測，包含完整的資料處理、模型訓練與評估流程。
 
-## 安裝與啟動
+## 安裝與設定
 
-### 1. 安裝需要的套件
+### 1. 環境需求
+- Python 3.8+
+- NVIDIA GPU (建議 8GB+ VRAM)
+- CUDA Toolkit 12.6
+- cuDNN 8.7.0
 
+### 2. 安裝 PyTorch
 ```bash
-pip install flask flask-cors python-dotenv
+# 使用 CUDA 12.6
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 ```
 
-### 2. 啟動服務器
-
+### 3. 安裝其他依賴
 ```bash
-python server.py
+pip install -r requirements.txt
 ```
 
-服務器將運行在 http://25.7.171.251:5000 (由 .env 文件中的 ShiLaCow_ip 設定)
-
-## API 使用方式
-
-### 1. GET 請求
-
-發送GET請求到 `/api/add` 端點，並通過URL參數傳遞兩個數字。
-
-#### 請求格式
-```
-GET /api/add?a=數字1&b=數字2
+### 4. 驗證安裝
+```python
+import torch
+print(f"PyTorch 版本: {torch.__version__}")
+print(f"CUDA 是否可用: {torch.cuda.is_available()}")
+print(f"可用的 GPU 數量: {torch.cuda.device_count()}")
 ```
 
-#### 範例
-```
-GET http://25.7.171.251:5000/api/add?a=5&b=3
-```
-
-#### 使用curl
+### 5. 啟動專案
 ```bash
-curl "http://25.7.171.251:5000/api/add?a=5&b=3"
+python main.py
 ```
 
-### 2. POST 請求
+## 專案結構
+- `anomaly_detection.py`: 異常檢測的主要腳本
+- `config.py`: 專案的配置設定
+- `data_loader.py`: 處理資料載入和預處理
+- `evaluate.py`: 包含評估指標和邏輯
+- `main.py`: 執行專案的入口點
+- `model.py`: 定義機器學習模型的架構
+- `train.py`: 模型訓練的腳本
+- `utils.py`: 專案的實用函式
+- `visualize.py`: 結果的視覺化工具
 
-發送POST請求到 `/api/add` 端點，並通過JSON格式傳遞兩個數字。
+## 資料夾結構
+- `datasets/`: 儲存資料集的目錄
+- `img/`: 儲存圖片的目錄
+- `logs/`: 儲存日誌檔案的目錄
+- `models/`: 儲存訓練好的模型的目錄
 
-#### 請求格式
-```
-POST /api/add
-Content-Type: application/json
-
-{
-  "a": 數字1,
-  "b": 數字2
-}
-```
-
-#### 範例
-```bash
-curl -X POST http://25.7.171.251:5000/api/add \
-  -H "Content-Type: application/json" \
-  -d '{"a": 5, "b": 3}'
-```
-
-## 回應格式
-
-### 成功回應
-
-```json
-{
-  "success": true,
-  "result": 8,
-  "operation": "5.0 + 3.0"
-}
-```
-
-### 失敗回應
-
-```json
-{
-  "success": false,
-  "error": "錯誤訊息",
-  "message": "請提供有效的數字參數"
-}
-```
-
-## 錯誤處理
-
-- 如果提供的參數不是有效的數字，API將返回400錯誤。
-- 確保在請求中提供必要的參數 `a` 和 `b`。
-
-## 環境配置
-
-- API 服務器 IP 地址由 `.env` 文件中的 `ShiLaCow_ip` 變數設定。
-- 如需修改服務器 IP，請編輯 `.env` 文件而非直接修改程式碼。
+## 授權
+此專案採用 MIT 授權。詳情請參閱 LICENSE 檔案。

@@ -1,5 +1,26 @@
 # Version History
 
+## v0.1.6 [N]
+- 更新 PyTorch amp 相關呼叫以符合新版本要求
+- 改善學習率調度器的警告訊息
+- 優化指標計算的零除處理
+- 增加中文化的指標說明日誌
+
+## v0.1.5
+- 修正 train.py 中的 autocast 使用方式
+- 強制使用 CUDA 進行訓練
+- 改進 GPU 相關的錯誤處理
+
+## v0.1.4
+- 更新 model/README.md 的安裝指示
+- 新增 CUDA 和 PyTorch GPU 環境設定說明
+- 加入環境驗證步驟
+
+## v0.1.3
+- 優化 main.py 與 train.py 的設備配置邏輯，支援無 CUDA 環境
+- 新增設備檢查與適配機制
+- 改進混合精度訓練的相容性
+
 ## v0.1.2
 - 刪除和過濾不需要的檔案
 - 建立gitignore
