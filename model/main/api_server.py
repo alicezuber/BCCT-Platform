@@ -14,7 +14,7 @@ setup_logger(logger, "api")
 
 app = Flask(__name__)
 
-# 載入配置
+# 載入配置~
 config = load_config()
 
 # 全局變量存儲模型
