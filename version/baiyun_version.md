@@ -1,5 +1,58 @@
 # Version History
 
+## v0.2.0
+- 移除 feature_names 相關實現，不符合需求
+- 修改 api_server.py 僅使用特徵列表格式
+- 更新 README.md 簡化API使用說明
+- 刪除 datasets/feature_names.json 檔案
+
+## v0.1.9
+- 修復 api_server.py 中模型檢查點加載的錯誤處理邏輯
+- 優化 train.py 中的批次大小調整機制以應對顯存不足
+- 添加訓練過程中的梯度檢查功能
+- 增強指標計算的錯誤處理與日誌記錄
+- 更新 focal loss 的實現以提升不平衡數據處理效果
+- 增加測試時的數據增強功能 (TTA)
+- 改進模型驗證階段的性能與穩定性
+- 優化學習率調度器的參數設置
+- 修正部分日誌訊息的格式與內容
+- 添加最終模型狀態保存功能
+
+## v0.1.8
+- 重構API服務接口，支援兩種參數傳遞方式（特徵列表和鍵值對）
+- 新增 `/api/docs` 端點提供API文檔
+- 創建 `datasets/feature_names.json` 定義特徵名稱列表
+- 優化API錯誤處理和回應格式
+- 更新README.md添加詳細的API使用說明和示例代碼
+
+## v0.1.7
+- 新增異常檢測 REST API 服務 (api_server.py)
+- 實現 POST 請求異常檢測功能端點 /detect
+- 添加 API 服務啟動批次檔 (start_api.bat)
+- 更新 README.md 添加 API 使用說明
+- 添加 Flask 相關依賴到 requirements.txt
+
+## v0.1.6
+- 更新 PyTorch amp 相關呼叫以符合新版本要求
+- 改善學習率調度器的警告訊息
+- 優化指標計算的零除處理
+- 增加中文化的指標說明日誌
+
+## v0.1.5
+- 修正 train.py 中的 autocast 使用方式
+- 強制使用 CUDA 進行訓練
+- 改進 GPU 相關的錯誤處理
+
+## v0.1.4
+- 更新 model/README.md 的安裝指示
+- 新增 CUDA 和 PyTorch GPU 環境設定說明
+- 加入環境驗證步驟
+
+## v0.1.3
+- 優化 main.py 與 train.py 的設備配置邏輯，支援無 CUDA 環境
+- 新增設備檢查與適配機制
+- 改進混合精度訓練的相容性
+
 ## v0.1.2
 - 刪除和過濾不需要的檔案
 - 建立gitignore
