@@ -1,5 +1,11 @@
 # Version History
 
+## v0.2.0
+- 移除 feature_names 相關實現，不符合需求
+- 修改 api_server.py 僅使用特徵列表格式
+- 更新 README.md 簡化API使用說明
+- 刪除 datasets/feature_names.json 檔案
+
 ## v0.1.9
 - 修復 api_server.py 中模型檢查點加載的錯誤處理邏輯
 - 優化 train.py 中的批次大小調整機制以應對顯存不足
@@ -13,7 +19,11 @@
 - 添加最終模型狀態保存功能
 
 ## v0.1.8
-- 修復來自使用者 @IWannaListenToUSayUwU 製造的拉取問題
+- 重構API服務接口，支援兩種參數傳遞方式（特徵列表和鍵值對）
+- 新增 `/api/docs` 端點提供API文檔
+- 創建 `datasets/feature_names.json` 定義特徵名稱列表
+- 優化API錯誤處理和回應格式
+- 更新README.md添加詳細的API使用說明和示例代碼
 
 ## v0.1.7
 - 新增異常檢測 REST API 服務 (api_server.py)

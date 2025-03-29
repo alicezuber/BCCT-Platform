@@ -7,26 +7,35 @@ import logging
 from utils import setup_logger, load_config
 from model import create_model
 import traceback
+from flask_cors import CORS
 
 # 設置日誌
 logger = logging.getLogger("anomaly_detection_api")
 setup_logger(logger, "api")
 
 app = Flask(__name__)
+CORS(app)  # 啟用跨域支援
 
-# 載入配置~
+# 載入配置
 config = load_config()
 
 # 全局變量存儲模型
 model = None
 device = None
+input_dim = None
 
 def load_model():
     """載入預訓練的異常檢測模型"""
-    global model, device
+    global model, device, input_dim
     try:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model = create_model(config)
+        
+        # 檢查配置中是否有輸入維度
+        input_dim = getattr(config, 'input_dim', 10)
+        logger.info(f"使用配置中的輸入維度: {input_dim}")
+
+        # 創建模型
+        model = create_model(config, input_dim=input_dim)
         
         # 找到最新的模型檢查點
         model_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
@@ -58,27 +67,57 @@ def health_check():
     """健康檢查端點"""
     if model is None:
         return jsonify({"status": "error", "message": "模型未初始化"}), 503
-    return jsonify({"status": "ok", "message": "API服務正常運行中"}), 200
+    return jsonify({
+        "status": "ok", 
+        "message": "API服務正常運行中",
+        "model_info": {
+            "input_dim": input_dim,
+            "device": str(device)
+        }
+    }), 200
 
-@app.route('/detect', methods=['POST'])
+@app.route('/api/detect', methods=['POST'])
 def detect_anomaly():
-    """異常檢測端點"""
+    """異常檢測端點 - 傳入特徵數據"""
     if model is None:
         return jsonify({"status": "error", "message": "模型未初始化"}), 503
         
     try:
         # 從請求中獲取數據
         data = request.json
-        if not data or 'features' not in data:
-            return jsonify({"status": "error", "message": "缺少必要的特徵數據"}), 400
+        if not data:
+            return jsonify({"status": "error", "message": "請求中缺少JSON數據"}), 400
             
-        # 處理輸入數據
-        features = np.array(data['features'], dtype=np.float32)
-        input_tensor = torch.tensor(features, dtype=torch.float32).to(device)
-        
-        # 如果數據是單個樣本，添加批次維度
-        if len(input_tensor.shape) == 1:
-            input_tensor = input_tensor.unsqueeze(0)
+        # 檢查請求格式
+        if 'features' in data:
+            # 列表格式的特徵
+            features = np.array(data['features'], dtype=np.float32)
+        else:
+            return jsonify({
+                "status": "error", 
+                "message": "請求格式錯誤，需要 'features' 欄位",
+                "example": {
+                    "features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+                }
+            }), 400
+            
+        # 檢查特徵維度
+        if len(features.shape) == 1:
+            if features.shape[0] != input_dim and input_dim is not None:
+                return jsonify({
+                    "status": "error", 
+                    "message": f"特徵數量不匹配，需要 {input_dim} 個特徵，但提供了 {features.shape[0]} 個",
+                    "expected_features": input_dim,
+                    "received_features": features.shape[0]
+                }), 400
+            input_tensor = torch.tensor(features, dtype=torch.float32).unsqueeze(0).to(device)
+        else:
+            if features.shape[1] != input_dim and input_dim is not None:
+                return jsonify({
+                    "status": "error", 
+                    "message": f"特徵數量不匹配，需要 {input_dim} 個特徵，但提供了 {features.shape[1]} 個"
+                }), 400
+            input_tensor = torch.tensor(features, dtype=torch.float32).to(device)
             
         # 使用模型進行預測
         with torch.no_grad():
@@ -99,7 +138,8 @@ def detect_anomaly():
             ],
             "metadata": {
                 "model_version": config.model_version,
-                "threshold": threshold
+                "threshold": threshold,
+                "feature_count": input_dim
             }
         }
         
@@ -108,7 +148,79 @@ def detect_anomaly():
     except Exception as e:
         logger.error(f"預測過程中發生錯誤: {str(e)}")
         logger.error(traceback.format_exc())
-        return jsonify({"status": "error", "message": f"處理請求時發生錯誤: {str(e)}"}), 500
+        return jsonify({
+            "status": "error", 
+            "message": f"處理請求時發生錯誤: {str(e)}"
+        }), 500
+
+@app.route('/api/docs', methods=['GET'])
+def get_api_docs():
+    """API文檔端點"""
+    docs = {
+        "api_version": "1.0.0",
+        "endpoints": [
+            {
+                "path": "/health",
+                "method": "GET",
+                "description": "健康檢查端點，用於確認API服務狀態",
+                "response_example": {
+                    "status": "ok", 
+                    "message": "API服務正常運行中",
+                    "model_info": {
+                        "input_dim": 10,
+                        "device": "cuda"
+                    }
+                }
+            },
+            {
+                "path": "/api/detect",
+                "method": "POST",
+                "description": "異常檢測端點，用於根據輸入特徵進行異常檢測",
+                "request_formats": [
+                    {
+                        "format": "特徵列表格式",
+                        "example": {
+                            "features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+                        },
+                        "note": "特徵值以數值列表形式傳入，必須按順序提供所有特徵"
+                    }
+                ],
+                "response_example": {
+                    "status": "success",
+                    "predictions": [
+                        {"sample_id": 0, "anomaly_score": 0.87, "is_anomaly": true}
+                    ],
+                    "metadata": {
+                        "model_version": "1.0.0",
+                        "threshold": 0.5,
+                        "feature_count": 10
+                    }
+                }
+            },
+            {
+                "path": "/api/docs",
+                "method": "GET",
+                "description": "API文檔端點，提供API使用說明"
+            }
+        ]
+    }
+    return jsonify(docs), 200
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "status": "error",
+        "message": "找不到請求的資源",
+        "available_endpoints": ["/health", "/api/detect", "/api/docs"]
+    }), 404
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+    return jsonify({
+        "status": "error",
+        "message": "請求方法不允許",
+        "hint": "請檢查您是否使用了正確的HTTP方法(GET/POST)"
+    }), 405
 
 if __name__ == '__main__':
     # 在啟動服務器前載入模型

@@ -49,24 +49,32 @@ start_api.bat
 #### 1. 健康檢查
 - **URL**: `/health`
 - **方法**: GET
+- **說明**: 檢查API服務狀態並返回模型配置信息
 - **回應範例**:
 ```json
 {
   "status": "ok",
-  "message": "API服務正常運行中"
+  "message": "API服務正常運行中",
+  "model_info": {
+    "input_dim": 10,
+    "device": "cuda"
+  }
 }
 ```
 
 #### 2. 異常檢測
-- **URL**: `/detect`
+- **URL**: `/api/detect`
 - **方法**: POST
 - **內容類型**: application/json
 - **請求格式**:
 ```json
 {
-  "features": [0.1, 0.2, 0.3, 0.4, ...]
+  "features": [36.5, 45.2, 101.3, 220.1, 5.2, 1120.5, 0.03, 65.7, 1750.0, 0.12]
 }
 ```
+
+> **注意**: 特徵列表必須按照模型訓練時的特徵順序提供，且數量必須與模型輸入維度一致。
+
 - **回應範例**:
 ```json
 {
@@ -80,33 +88,50 @@ start_api.bat
   ],
   "metadata": {
     "model_version": "1.0.0",
-    "threshold": 0.5
+    "threshold": 0.5,
+    "feature_count": 10
   }
 }
 ```
 
+#### 3. API文檔
+- **URL**: `/api/docs`
+- **方法**: GET
+- **說明**: 獲取API使用說明和示例
+
 ### API使用範例
 
-使用curl發送請求:
+**使用curl發送請求:**
 ```bash
-curl -X POST http://localhost:5000/detect \
+curl -X POST http://localhost:5000/api/detect \
   -H "Content-Type: application/json" \
-  -d '{"features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]}'
+  -d '{"features": [36.5, 45.2, 101.3, 220.1, 5.2, 1120.5, 0.03, 65.7, 1750.0, 0.12]}'
 ```
 
-使用Python發送請求:
+**使用Python發送請求:**
 ```python
 import requests
 import json
 
-url = "http://localhost:5000/detect"
+url = "http://localhost:5000/api/detect"
 payload = {
-    "features": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    "features": [36.5, 45.2, 101.3, 220.1, 5.2, 1120.5, 0.03, 65.7, 1750.0, 0.12]
 }
 
 response = requests.post(url, json=payload)
 result = response.json()
 print(json.dumps(result, indent=2))
+```
+
+**錯誤處理:**
+API會返回詳細的錯誤信息，幫助您快速診斷問題：
+```json
+{
+  "status": "error",
+  "message": "特徵數量不匹配，需要 10 個特徵，但提供了 8 個",
+  "expected_features": 10,
+  "received_features": 8
+}
 ```
 
 ## 專案結構
