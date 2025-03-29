@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './styles/Register.module.css';
-import { useAuth } from '../context/AuthContext';
 import { initRegisterAnimation } from './text2';
 
 export default function Register() {
