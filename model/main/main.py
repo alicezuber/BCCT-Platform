@@ -18,10 +18,15 @@ def setup_environment():
     # 設置種子
     torch.manual_seed(42)
     np.random.seed(42)
+    
+    # 檢查 CUDA 可用性並設置設備
     if torch.cuda.is_available():
         torch.cuda.manual_seed(42)
         if hasattr(torch.backends, 'cudnn'):
             torch.backends.cudnn.deterministic = True
+        logger.info("使用 CUDA 進行訓練")
+    else:
+        logger.info("CUDA 不可用，使用 CPU 進行訓練")
     
     # 設置輸出目錄
     directories = ['datasets', 'models', 'logs', 'img']

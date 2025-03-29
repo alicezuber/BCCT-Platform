@@ -1,0 +1,18 @@
+{
+    "order_amount": 0.0,
+    "carbon_amount": 0.0,
+    "amount_carbon_ratio": 0.0,
+    "hour": 0.0,
+    "day_of_week": 0.0,
+    "day_of_month": 0.0,
+    "month": 0.0,
+    "carbon_emission": 0.0,
+    "GDP": 0.0,
+    "renewable_energy": 0.0,
+    "carbon_price": 0.0,
+    "carbon_trade_vol": 0.0,
+    "amount_ma_7": 0.0,
+    "amount_ma_30": 0.0,
+    "amount_std_7": 0.0,
+    "amount_std_30": 0.0
+}
